@@ -2,6 +2,14 @@ from operator import itemgetter
 import math
 
 
+class Const:
+    def e():
+        return math.e
+
+    def pi():
+        return math.pi
+
+
 class Stats:
     def amean(num_list):
         total = 0
@@ -268,26 +276,33 @@ class Arith:
         return a - b
 
 
+#1 = *, 2 = a, 3 = b, 4 = ab, 5 = list
+
 OPERATORS = (
-    ("amean", Stats.amean), ("gmean", Stats.gmean), ("mode", Stats.mode), ("median", Stats.median), ("arange", Stats.arange), ("grange", Stats.grange),
-    ("sum", Sets.sum), ("Σ", Sets.sum), ("product", Sets.product), ("Π", Sets.product),
-    ("=", Comps.equal_to), ("==", Comps.equal_to), ("=/=", Comps.not_equal_to), ("!=", Comps.not_equal_to), ("<=", Comps.less_than_e), (">=", Comps.more_than_e), ("<", Comps.less_than), (">", Comps.more_than),
-    ("not", Logic._not), ("or", Logic._or), ("nor", Logic.nor), ("and", Logic._and), ("nand", Logic.nand), ("xor", Logic.xor), ("xnor", Logic.xnor), ("xand", Logic.xnor), ("imp", Logic.implies), ("nimp", Logic.nimplies), ("rimp", Logic.r_implies), ("rnimp", Logic.r_nimplies),
-    ("rnd", Modifs.round), ("flr", Modifs.floor), ("cil", Modifs.ceiling), ("abs", Modifs.absolute), ("|", Modifs.absolute), ("inv", Modifs.inverse), ("rcp", Modifs.reciprocal),
-    ("sin", Trig.sin), ("cos", Trig.cos), ("tan", Trig.tan), ("cot", Trig.cot), ("sec", Trig.sec), ("csc", Trig.csc),
-    ("asin", Trig.arsin), ("acos", Trig.arcos), ("atan", Trig.artan), ("acot", Trig.arcot), ("asec", Trig.arsec), ("acsc", Trig.arcsc),
-    ("arsin", Trig.arsin), ("arcos", Trig.arcos), ("artan", Trig.artan), ("arcot", Trig.arcot), ("arsec", Trig.arsec), ("arcsc", Trig.arcsc),
-    ("arcsin", Trig.arsin), ("arccos", Trig.arcos), ("arctan", Trig.artan), ("arccot", Trig.arcot), ("arcsec", Trig.arsec), ("arccsc", Trig.arcsc),
-    ("sinh", Hyper.sinh), ("cosh", Hyper.cosh), ("tanh", Hyper.tanh), ("coth", Hyper.coth), ("sech", Hyper.sech), ("csch", Hyper.csch),
-    ("asinh", Hyper.arsinh), ("acosh", Hyper.arcosh), ("atanh", Hyper.artanh), ("acoth", Hyper.arcoth), ("asech", Hyper.sech), ("acsch", Hyper.arcsch),
-    ("arsinh", Hyper.arsinh), ("arcosh", Hyper.arcosh), ("artanh", Hyper.artanh), ("arcoth", Hyper.arcoth), ("arsech", Hyper.sech), ("arcsch", Hyper.arcsch),
-    ("arcsinh", Hyper.arsinh), ("arccosh", Hyper.arcosh), ("arctanh", Hyper.artanh), ("arccoth", Hyper.arcoth), ("arcsech", Hyper.sech), ("arccsch", Hyper.arcsch),
-    ("exp", Expo.nat_power), ("pow", Expo.power), ("ln", Expo.nat_log), ("log", Expo.log),
-    ("-", Single.minus), ("!", Single.gamma), ("c", Single.ncr), ("p", Single.npr),
-    ("^", Index.exponent), ("**", Index.exponent), ("rt", Index.root),
-    ("/", Geo.divide), ("//", Geo.floordiv), ("%", Geo.modulo), ("*", Geo.multiply),
-    ("+", Arith.add), ("-", Arith.subtract)
+    ("e", Const.e, 1), ("pi", Const.pi, 1), ("π", Const.pi, 1),
+    ("amean", Stats.amean, 5), ("gmean", Stats.gmean, 5), ("mode", Stats.mode, 5), ("median", Stats.median, 5), ("arange", Stats.arange, 5), ("grange", Stats.grange, 5),
+    ("sum", Sets.sum, 5), ("Σ", Sets.sum, 5), ("product", Sets.product, 5), ("Π", Sets.product, 5),
+    ("=", Comps.equal_to, 4), ("==", Comps.equal_to, 4), ("=/=", Comps.not_equal_to, 4), ("!=", Comps.not_equal_to, 4), ("<=", Comps.less_than_e, 4), (">=", Comps.more_than_e, 4), ("<", Comps.less_than, 4), (">", Comps.more_than, 4),
+    ("not", Logic._not, 4), ("or", Logic._or, 4), ("nor", Logic.nor, 4), ("and", Logic._and, 4), ("nand", Logic.nand, 4), ("xor", Logic.xor, 4), ("xnor", Logic.xnor, 4), ("xand", Logic.xnor, 4), ("imp", Logic.implies, 4), ("nimp", Logic.nimplies, 4), ("rimp", Logic.r_implies, 4), ("rnimp", Logic.r_nimplies, 4),
+    ("rnd", Modifs.round, 3), ("flr", Modifs.floor, 3), ("cil", Modifs.ceiling, 3), ("abs", Modifs.absolute, 3), ("|", Modifs.absolute, 3), ("inv", Modifs.inverse, 3), ("rcp", Modifs.reciprocal, 3),
+    ("sin", Trig.sin, 3), ("cos", Trig.cos, 3), ("tan", Trig.tan, 3), ("cot", Trig.cot, 3), ("sec", Trig.sec, 3), ("csc", Trig.csc, 3),
+    ("asin", Trig.arsin, 3), ("acos", Trig.arcos, 3), ("atan", Trig.artan, 3), ("acot", Trig.arcot, 3), ("asec", Trig.arsec, 3), ("acsc", Trig.arcsc, 3),
+    ("arsin", Trig.arsin, 3), ("arcos", Trig.arcos, 3), ("artan", Trig.artan, 3), ("arcot", Trig.arcot, 3), ("arsec", Trig.arsec, 3), ("arcsc", Trig.arcsc, 3),
+    ("arcsin", Trig.arsin, 3), ("arccos", Trig.arcos, 3), ("arctan", Trig.artan, 3), ("arccot", Trig.arcot, 3), ("arcsec", Trig.arsec, 3), ("arccsc", Trig.arcsc, 3),
+    ("sinh", Hyper.sinh, 3), ("cosh", Hyper.cosh, 3), ("tanh", Hyper.tanh, 3), ("coth", Hyper.coth, 3), ("sech", Hyper.sech, 3), ("csch", Hyper.csch, 3),
+    ("asinh", Hyper.arsinh, 3), ("acosh", Hyper.arcosh, 3), ("atanh", Hyper.artanh, 3), ("acoth", Hyper.arcoth, 3), ("asech", Hyper.sech, 3), ("acsch", Hyper.arcsch, 3),
+    ("arsinh", Hyper.arsinh, 3), ("arcosh", Hyper.arcosh, 3), ("artanh", Hyper.artanh, 3), ("arcoth", Hyper.arcoth, 3), ("arsech", Hyper.sech, 3), ("arcsch", Hyper.arcsch, 3),
+    ("arcsinh", Hyper.arsinh, 3), ("arccosh", Hyper.arcosh, 3), ("arctanh", Hyper.artanh, 3), ("arccoth", Hyper.arcoth, 3), ("arcsech", Hyper.sech, 3), ("arccsch", Hyper.arcsch, 3),
+    ("exp", Expo.nat_power, 3), ("pow", Expo.power, 4), ("ln", Expo.nat_log, 3), ("log", Expo.log, 4),
+    ("-", Single.minus, 3), ("!", Single.gamma, 2), ("c", Single.ncr, 4), ("p", Single.npr, 4),
+    ("^", Index.exponent, 4), ("**", Index.exponent, 4), ("rt", Index.root, 4),
+    ("/", Geo.divide, 4), ("//", Geo.floordiv, 4), ("%", Geo.modulo, 4), ("*", Geo.multiply, 4),
+    ("+", Arith.add, 4), ("-", Arith.subtract, 4)
 )
+
+OPERATOR_STRINGS = list()
+for operator_tuple in OPERATORS:
+    OPERATOR_STRINGS.append(operator_tuple[0])
 
 NUMBERS = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", ",")
 
