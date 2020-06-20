@@ -3,32 +3,54 @@ import math
 
 
 class Const:
-    def e():
+    def e(a, b):
         return math.e
 
-    def pi():
+    def pi(a, b):
         return math.pi
 
-    def g():
+    def g(a, b):
         return 9.80665
 
 
+class Index:
+    def exponent(a, b):
+        return a ** b
+
+    def root(a, b):
+        return b ** (1 / a)
+
+
+class Single:
+    def minus(a, b):
+        return -b
+
+    def gamma(a, b):
+        return math.gamma(a)
+
+    def ncr(a, b):
+        return math.gamma(a) / math.gamma(b) / math.gamma(a - b)
+
+    def npr(a, b):
+        return math.gamma(a) / math.gamma(a - b)
+
+
 class Stats:
-    def amean(num_list):
+    def amean(a, num_list):
         total = 0
         for num in num_list:
             total += num
         total /= len(num_list)
         return total
 
-    def gmean(num_list):
+    def gmean(a, num_list):
         total = 1
         for num in num_list:
             total *= num
         total **= (1 / len(num_list))
         return total
 
-    def mode(num_list):
+    def mode(a, num_list):
         numbers = list()
         for num in num_list:
             numbers.append((num, num_list.count(num)))
@@ -36,7 +58,7 @@ class Stats:
         mode = sorted_nums[0][0]
         return mode
 
-    def median(num_list):
+    def median(a, num_list):
         length = len(num_list)
         sorted_nums = sorted(num_list)
         if length % 2 == 0:
@@ -45,25 +67,25 @@ class Stats:
             median = sorted_nums[(length + 1) / 2]
         return median
 
-    def arange(num_list):
+    def arange(a, num_list):
         sorted_nums = sorted(num_list)
         arange = sorted_nums[len(num_list) - 1] - sorted_nums[0]
         return arange
 
-    def grange(num_list):
+    def grange(a, num_list):
         sorted_nums = sorted(num_list)
         grange = sorted_nums[len(num_list) - 1] / sorted_nums[0]
         return grange
 
 
 class Sets:
-    def sum(num_list):
+    def sum(a, num_list):
         total = 0
         for num in num_list:
             total += num
         return total
 
-    def product(num_list):
+    def product(a, num_list):
         total = 1
         for num in num_list:
             total *= num
@@ -91,7 +113,7 @@ class Comps:
 
 
 class Logic:
-    def _not(b):
+    def _not(a, b):
         return not b
 
     def _or(a, b):
@@ -126,135 +148,113 @@ class Logic:
 
 
 class Modifs:
-    def round(b):
+    def round(a, b):
         return round(b)
 
-    def floor(b):
+    def floor(a, b):
         return math.floor(b)
 
-    def ceiling(b):
+    def ceiling(a, b):
         return math.ceil(b)
 
-    def absolute(b):
+    def absolute(a, b):
         return abs(b)
 
-    def inverse(b):
+    def inverse(a, b):
         return -b
 
-    def reciprocal(b):
+    def reciprocal(a, b):
         return 1 / b
 
 
 class Trig:
-    def sin(b):
+    def sin(a, b):
         return math.sin(b)
 
-    def cos(b):
+    def cos(a, b):
         return math.cos(b)
 
-    def tan(b):
+    def tan(a, b):
         return math.tan(b)
 
-    def cot(b):
+    def cot(a, b):
         return 1 / math.tan(b)
 
-    def sec(b):
+    def sec(a, b):
         return 1 / math.cos(b)
 
-    def csc(b):
+    def csc(a, b):
         return 1 / math.sin(b)
 
-    def arsin(b):
+    def arsin(a, b):
         return math.asin(b)
 
-    def arcos(b):
+    def arcos(a, b):
         return math.acos(b)
 
-    def artan(b):
+    def artan(a, b):
         return math.atan(b)
 
-    def arcot(b):
+    def arcot(a, b):
         return math.atan(1 / b)
 
-    def arsec(b):
+    def arsec(a, b):
         return math.acos(1 / b)
 
-    def arcsc(b):
+    def arcsc(a, b):
         return math.asin(1 / b)
 
 
 class Hyper:
-    def sinh(b):
+    def sinh(a, b):
         return math.sinh(b)
 
-    def cosh(b):
+    def cosh(a, b):
         return math.cosh(b)
 
-    def tanh(b):
+    def tanh(a, b):
         return math.tanh(b)
 
-    def coth(b):
+    def coth(a, b):
         return 1 / math.tanh(b)
 
-    def sech(b):
+    def sech(a, b):
         return 1 / math.cosh(b)
 
-    def csch(b):
+    def csch(a, b):
         return 1 / math.sinh(b)
 
-    def arsinh(b):
+    def arsinh(a, b):
         return math.asinh(b)
 
-    def arcosh(b):
+    def arcosh(a, b):
         return math.acosh(b)
 
-    def artanh(b):
+    def artanh(a, b):
         return math.atanh(b)
 
-    def arcoth(b):
+    def arcoth(a, b):
         return math.atanh(1 / b)
 
-    def arsech(b):
+    def arsech(a, b):
         return math.acosh(1 / b)
 
-    def arcsch(b):
+    def arcsch(a, b):
         return math.asinh(1 / b)
 
 
 class Expo:
-    def nat_power(b):
+    def nat_power(a, b):
         return math.e ** b
 
     def power(a, b):
         return a ** b
 
-    def nat_log(b):
+    def nat_log(a, b):
         return math.log(b)
 
     def log(a, b):
         return math.log(b, a)
-
-
-class Single:
-    def minus(b):
-        return -b
-
-    def gamma(a):
-        return math.gamma(a)
-
-    def ncr(a, b):
-        return math.gamma(a) / math.gamma(b) / math.gamma(a - b)
-
-    def npr(a, b):
-        return math.gamma(a) / math.gamma(a - b)
-
-
-class Index:
-    def exponent(a, b):
-        return a ** b
-
-    def root(a, b):
-        return b ** (1 / a)
 
 
 class Geo:
@@ -275,15 +275,14 @@ class Arith:
     def add(a, b):
         return a + b
 
-    def subtract(a, b):
-        return a - b
-
 
 # a o b
 # 1 = *, 2 = a, 3 = b, 4 = ab, 5 = list
 
 OPERATORS = (
     ("e", Const.e, 1), ("pi", Const.pi, 1), ("π", Const.pi, 1), ("g", Const.g, 1),
+    ("^", Index.exponent, 4), ("**", Index.exponent, 4), ("rt", Index.root, 4),
+    ("-", Single.minus, 3), ("!", Single.gamma, 2), ("c", Single.ncr, 4), ("p", Single.npr, 4),
     ("amean", Stats.amean, 5), ("gmean", Stats.gmean, 5), ("mode", Stats.mode, 5), ("median", Stats.median, 5), ("arange", Stats.arange, 5), ("grange", Stats.grange, 5),
     ("sum", Sets.sum, 5), ("Σ", Sets.sum, 5), ("product", Sets.product, 5), ("Π", Sets.product, 5),
     ("=", Comps.equal_to, 4), ("==", Comps.equal_to, 4), ("=/=", Comps.not_equal_to, 4), ("!=", Comps.not_equal_to, 4), ("<=", Comps.less_than_e, 4), (">=", Comps.more_than_e, 4), ("<", Comps.less_than, 4), (">", Comps.more_than, 4),
@@ -298,10 +297,8 @@ OPERATORS = (
     ("arsinh", Hyper.arsinh, 3), ("arcosh", Hyper.arcosh, 3), ("artanh", Hyper.artanh, 3), ("arcoth", Hyper.arcoth, 3), ("arsech", Hyper.sech, 3), ("arcsch", Hyper.arcsch, 3),
     ("arcsinh", Hyper.arsinh, 3), ("arccosh", Hyper.arcosh, 3), ("arctanh", Hyper.artanh, 3), ("arccoth", Hyper.arcoth, 3), ("arcsech", Hyper.sech, 3), ("arccsch", Hyper.arcsch, 3),
     ("exp", Expo.nat_power, 3), ("pow", Expo.power, 4), ("ln", Expo.nat_log, 3), ("log", Expo.log, 4),
-    ("-", Single.minus, 3), ("!", Single.gamma, 2), ("c", Single.ncr, 4), ("p", Single.npr, 4),
-    ("^", Index.exponent, 4), ("**", Index.exponent, 4), ("rt", Index.root, 4),
     ("/", Geo.divide, 4), ("//", Geo.floordiv, 4), ("%", Geo.modulo, 4), ("*", Geo.multiply, 4),
-    ("+", Arith.add, 4), ("-", Arith.subtract, 4)
+    ("+", Arith.add, 4)
 )
 
 OPERATOR_STRINGS = list()
