@@ -9,6 +9,9 @@ class Const:
     def pi():
         return math.pi
 
+    def g():
+        return 9.80665
+
 
 class Stats:
     def amean(num_list):
@@ -276,10 +279,11 @@ class Arith:
         return a - b
 
 
-#1 = *, 2 = a, 3 = b, 4 = ab, 5 = list
+# a o b
+# 1 = *, 2 = a, 3 = b, 4 = ab, 5 = list
 
 OPERATORS = (
-    ("e", Const.e, 1), ("pi", Const.pi, 1), ("π", Const.pi, 1),
+    ("e", Const.e, 1), ("pi", Const.pi, 1), ("π", Const.pi, 1), ("g", Const.g, 1),
     ("amean", Stats.amean, 5), ("gmean", Stats.gmean, 5), ("mode", Stats.mode, 5), ("median", Stats.median, 5), ("arange", Stats.arange, 5), ("grange", Stats.grange, 5),
     ("sum", Sets.sum, 5), ("Σ", Sets.sum, 5), ("product", Sets.product, 5), ("Π", Sets.product, 5),
     ("=", Comps.equal_to, 4), ("==", Comps.equal_to, 4), ("=/=", Comps.not_equal_to, 4), ("!=", Comps.not_equal_to, 4), ("<=", Comps.less_than_e, 4), (">=", Comps.more_than_e, 4), ("<", Comps.less_than, 4), (">", Comps.more_than, 4),

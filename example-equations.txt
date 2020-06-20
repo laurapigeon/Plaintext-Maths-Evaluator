@@ -1,0 +1,34 @@
+( 5-(2e+16*8-pi-2piexp6+3)^sin10)( 8(2piexp6+3)(-9 )7!(2 +(3//( 5) -5)+1) 5%8)-4
+
+2sin5
+5!7
+5!+7
+sum5,6,2+7
+2piexp5
+5!+sin10
+expsin
+
+if operation_string not in operation_strings:
+    # either operation_string is a combination of operations (that fill the whole string)
+    # or throw error
+
+    expsin-
+    look at e (y)
+    xpsin-
+    look at x (n)
+    look at xp (n)
+    look at xps (n)
+    look at xpsi (n)
+    look at xpsin (n)
+    look at xpsin- (n)
+    revert
+    expsin-
+    look at ex (n)
+    look at exp (y)
+    sin-
+    look at s (n)
+    look at si (n)
+    look at sin (y)
+    -
+    look at - (y)
+    * empty string therefore valid
