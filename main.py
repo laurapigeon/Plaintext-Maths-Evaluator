@@ -119,7 +119,7 @@ def sort_object_list(object_list):
                 insert_list.append([operation, "o", get_operation_info(operation, "index")])
                 prev_type = operation_type
 
-            if operation_type in (1, 2):
+            if operation_type in (1, 2) and i != len(object_list) - 1:
                 insert_list.append(["*", "o", 103])
 
             object_list[i:i + 1] = insert_list
@@ -183,24 +183,29 @@ def evaluate_object(i):
     global object_list
 
     has_a = m.OPERATORS[object_list[i][2]][2] in (2, 4)
-    has_b = m.OPERATORS[object_list[i][2]][2] in (3, 4, 5)
-    has_snazzy_b = m.OPERATORS[object_list[i][2]][2] == 5
+    has_b = m.OPERATORS[object_list[i][2]][2] in (3, 4)
+    has_list_b = m.OPERATORS[object_list[i][2]][2] == 5
 
-    if object_list[i - 1][1] == "o" and has_a:
-        evaluate_object(i - 1)
-    elif object_list[i + 1][1] == "o" and has_b:
-        evaluate_object(i + 1)
+    if has_a:
+        if object_list[i - 1][1] == "o":
+            evaluate_object(i - 1)
+        a = float(object_list[i - 1][0])
     else:
-        a = float(("0", object_list[i - 1][0])[has_a])
-        b = ("0", object_list[i + 1][0])[has_b]
-        if has_snazzy_b:
-            b = [int(x) for x in list(b)]
-        else:
-            b = float(b)
-        output = m.OPERATORS[object_list[i][2]][1](a, b)
-        lower_bound = (i, i - 1)[has_a]
-        upper_bound = (i + 1, i + 2)[has_b]
-        object_list[lower_bound:upper_bound] = [[output, "n"]]
+        a = 0.0
+    if has_b:
+        if object_list[i + 1][1] == "o":
+            evaluate_object(i + 1)
+        b = float(object_list[i + 1][0])
+    elif has_list_b:
+        b = [float(x) for x in object_list[i + 1][0]]
+    else:
+        b = 0.0
+
+    output = m.OPERATORS[object_list[i][2]][1](a, b)
+
+    lower_bound = (i, i - 1)[has_a]
+    upper_bound = (i + 1, i + 2)[has_b or has_list_b]
+    object_list[lower_bound:upper_bound] = [[output, "n"]]
 
 
 def get_operation_info(string, info):

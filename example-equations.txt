@@ -6,7 +6,7 @@
 sum5,6,2+7
 2piexp5
 5!+sin10
-expsin
+expsin5
 
 if operation_string not in operation_strings:
     # either operation_string is a combination of operations (that fill the whole string)

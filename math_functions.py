@@ -25,8 +25,8 @@ class Single:
     def minus(a, b):
         return -b
 
-    def gamma(a, b):
-        return math.gamma(a)
+    def factorial(a, b):
+        return math.gamma(a + 1)
 
     def ncr(a, b):
         return math.gamma(a) / math.gamma(b) / math.gamma(a - b)
@@ -282,7 +282,7 @@ class Arith:
 OPERATORS = (
     ("e", Const.e, 1), ("pi", Const.pi, 1), ("π", Const.pi, 1), ("g", Const.g, 1),
     ("^", Index.exponent, 4), ("**", Index.exponent, 4), ("rt", Index.root, 4),
-    ("-", Single.minus, 3), ("!", Single.gamma, 2), ("c", Single.ncr, 4), ("p", Single.npr, 4),
+    ("-", Single.minus, 3), ("!", Single.factorial, 2), ("c", Single.ncr, 4), ("p", Single.npr, 4),
     ("amean", Stats.amean, 5), ("gmean", Stats.gmean, 5), ("mode", Stats.mode, 5), ("median", Stats.median, 5), ("arange", Stats.arange, 5), ("grange", Stats.grange, 5),
     ("sum", Sets.sum, 5), ("Σ", Sets.sum, 5), ("product", Sets.product, 5), ("Π", Sets.product, 5),
     ("=", Comps.equal_to, 4), ("==", Comps.equal_to, 4), ("=/=", Comps.not_equal_to, 4), ("!=", Comps.not_equal_to, 4), ("<=", Comps.less_than_e, 4), (">=", Comps.more_than_e, 4), ("<", Comps.less_than, 4), (">", Comps.more_than, 4),
