@@ -29,10 +29,10 @@ class Single:
         return math.gamma(a + 1)
 
     def ncr(a, b):
-        return math.gamma(a) / math.gamma(b) / math.gamma(a - b)
+        return math.gamma(a + 1) / math.gamma(b + 1) / math.gamma(a - b + 1)
 
     def npr(a, b):
-        return math.gamma(a) / math.gamma(a - b)
+        return math.gamma(a + 1) / math.gamma(a - b + 1)
 
 
 class Stats:
@@ -114,37 +114,37 @@ class Comps:
 
 class Logic:
     def _not(a, b):
-        return not b
+        return ~ int(b)
 
     def _or(a, b):
-        return a or b
+        return int(a) | int(b)
 
     def nor(a, b):
-        return not (a or b)
+        return ~ (int(a) | int(b))
 
     def _and(a, b):
-        return a and b
+        return int(a) & int(b)
 
     def nand(a, b):
-        return not (a and b)
+        return ~ (int(a) & int(b))
 
     def xor(a, b):
-        return (not (a and b)) and (a or b)
+        return int(a) ^ int(b)
 
     def xnor(a, b):
-        return not ((not (a and b)) and (a or b))
+        return ~ (int(a) ^ int(b))
 
     def implies(a, b):
-        return (not a) or b
+        return (~ int(a)) | int(b)
 
     def nimplies(a, b):
-        return not ((not a) or b)
+        return ~ ((~ int(a)) | int(b))
 
     def r_implies(a, b):
-        return a or (not b)
+        return int(a) | (~ int(b))
 
     def r_nimplies(a, b):
-        return not(a or (not b))
+        return ~ (int(a) | (~ int(b)))
 
 
 class Modifs:
@@ -305,6 +305,11 @@ OPERATOR_STRINGS = list()
 for operator_tuple in OPERATORS:
     OPERATOR_STRINGS.append(operator_tuple[0])
 
-NUMBERS = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", ",")
+NUMBERS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", ","]
 
-BRACKETS = (("(", "[", "{"), (")", "]", "}"))
+BRACKETS = (["(", "[", "{"], [")", "]", "}"])
+
+CHAR_SET = str()
+for op in [" "] + OPERATOR_STRINGS + NUMBERS + BRACKETS[0] + BRACKETS[1]:
+    CHAR_SET += op
+CHAR_SET = set(CHAR_SET)
