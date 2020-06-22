@@ -268,5 +268,9 @@ async def on_message(message):
         await message.channel.send(output)
 
 print_steps = False
+discord = True
 
-client.run('NzI0NjAzNTg1MjYxOTk0MDY0.XvCmPQ.RVayf6Ll17rOfmTvhMiwYUgFgMs')
+if discord:
+    client.run('NzI0NjAzNTg1MjYxOTk0MDY0.XvCmPQ.RVayf6Ll17rOfmTvhMiwYUgFgMs')
+else:
+    print(Evaluate.main(input("Equation here:\n")))
