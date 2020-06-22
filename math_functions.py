@@ -286,7 +286,7 @@ OPERATORS = (
     ("amean", Stats.amean, 5), ("gmean", Stats.gmean, 5), ("mode", Stats.mode, 5), ("median", Stats.median, 5), ("arange", Stats.arange, 5), ("grange", Stats.grange, 5),
     ("sum", Sets.sum, 5), ("Σ", Sets.sum, 5), ("product", Sets.product, 5), ("Π", Sets.product, 5),
     ("=", Comps.equal_to, 4), ("==", Comps.equal_to, 4), ("=/=", Comps.not_equal_to, 4), ("!=", Comps.not_equal_to, 4), ("<=", Comps.less_than_e, 4), (">=", Comps.more_than_e, 4), ("<", Comps.less_than, 4), (">", Comps.more_than, 4),
-    ("not", Logic._not, 4), ("or", Logic._or, 4), ("nor", Logic.nor, 4), ("and", Logic._and, 4), ("nand", Logic.nand, 4), ("xor", Logic.xor, 4), ("xnor", Logic.xnor, 4), ("xand", Logic.xnor, 4), ("imp", Logic.implies, 4), ("nimp", Logic.nimplies, 4), ("rimp", Logic.r_implies, 4), ("rnimp", Logic.r_nimplies, 4),
+    ("not", Logic._not, 3), ("or", Logic._or, 4), ("nor", Logic.nor, 4), ("and", Logic._and, 4), ("nand", Logic.nand, 4), ("xor", Logic.xor, 4), ("xnor", Logic.xnor, 4), ("xand", Logic.xnor, 4), ("imp", Logic.implies, 4), ("nimp", Logic.nimplies, 4), ("rimp", Logic.r_implies, 4), ("rnimp", Logic.r_nimplies, 4),
     ("rnd", Modifs.round, 3), ("flr", Modifs.floor, 3), ("cil", Modifs.ceiling, 3), ("abs", Modifs.absolute, 3), ("|", Modifs.absolute, 3), ("inv", Modifs.inverse, 3), ("rcp", Modifs.reciprocal, 3),
     ("sin", Trig.sin, 3), ("cos", Trig.cos, 3), ("tan", Trig.tan, 3), ("cot", Trig.cot, 3), ("sec", Trig.sec, 3), ("csc", Trig.csc, 3),
     ("asin", Trig.arsin, 3), ("acos", Trig.arcos, 3), ("atan", Trig.artan, 3), ("acot", Trig.arcot, 3), ("asec", Trig.arsec, 3), ("acsc", Trig.arcsc, 3),

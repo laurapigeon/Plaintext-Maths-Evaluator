@@ -178,14 +178,20 @@ class Evaluate:
         has_list_b = m.OPERATORS[object_list[i][2]][2] == 5
 
         if has_a:
-            if object_list[i - 1][1] == "o":
-                Evaluate.evaluate_object(i - 1, object_list)
+            if object_list[i - 1][1] == "o" and i != 0:
+                if m.OPERATORS[object_list[i][2]][2] not in (3, 4, 5):
+                    Evaluate.evaluate_object(i - 1, object_list)
+                else:
+                    message.channel.send("Recursive equations {}{}".format(object_list[i - 1][0], object_list[i][0]))
             a = float(object_list[i - 1][0])
         else:
             a = 0.0
         if has_b:
-            if object_list[i + 1][1] == "o":
-                Evaluate.evaluate_object(i + 1, object_list)
+            if object_list[i + 1][1] == "o" and i != len(object_list) - 1:
+                if m.OPERATORS[object_list[i][2]][2] not in (2, 4):
+                    Evaluate.evaluate_object(i + 1, object_list)
+                else:
+                    message.channel.send("Recursive equations {}{}".format(object_list[i - 1][0], object_list[i][0]))
             b = float(object_list[i + 1][0])
         elif has_list_b:
             b = [float(x) for x in object_list[i + 1][0]]
@@ -267,10 +273,10 @@ async def on_message(message):
         output = Evaluate.main(message.content)
         await message.channel.send(output)
 
-print_steps = False
+print_steps = True
 discord = True
 
 if discord:
-    client.run('NzI0NjAzNTg1MjYxOTk0MDY0.XvCmPQ.RVayf6Ll17rOfmTvhMiwYUgFgMs')
+    client.run('')
 else:
     print(Evaluate.main(input("Equation here:\n")))
