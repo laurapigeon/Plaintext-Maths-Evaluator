@@ -98,17 +98,27 @@ class Evaluate:
 
         return object_list
 
-    def sort_object_list(object_list):
+    def sort_object_list(object_list, loop):
         for i, object_info in enumerate(object_list):
-            if object_info[1] == "n" and "," in object_info[0]:
-                object_list[i][0] = object_info[0].split(",")
+            if object_info[1] == "n":
+                if "," in object_info[0]:
+                    object_list[i][0] = object_info[0].split(",")
 
-                for number in object_info[0]:
-                    if number.count(".") > 1:
-                        message.channel.send("Invalid number {}".format(number))
+                    for number in object_info[0]:
+                        if number.count(".") > 1:
+                            if loop > 0:
+                                raise Exception("Invalid number {}".format(number))
+                            else:
+                                raise Exception(None)
+
+                elif object_info[0].count(".") > 1:
+                    if loop > 0:
+                        raise Exception("Invalid number {}".format(object_info[0]))
+                    else:
+                        raise Exception(None)
 
             elif object_info[1] == "c":
-                op_list = Evaluate.split_op_string(object_info[0])
+                op_list = Evaluate.split_op_string(object_info[0], loop)
 
                 insert_list = list()
                 prev_type = None
@@ -128,14 +138,16 @@ class Evaluate:
 
         return object_list
 
-    def split_op_string(op_string):
+    def split_op_string(op_string, loop):
         op_list = list()
 
         valid = Evaluate.test_op_string(op_string, op_list)
         if valid:
             return op_list
+        elif loop > 0:
+            raise Exception("Invalid equation {}".format(op_string))
         else:
-            message.channel.send("Invalid equation {}".format(op_string))
+            raise Exception(None)
 
     def test_op_string(op_string, op_list):
         if op_string in m.OPERATOR_STRINGS:
@@ -159,7 +171,8 @@ class Evaluate:
         return valid
 
     def evaluate_object_list(object_list):
-        while len(object_list) > 1:
+        done = False
+        while not done:
             min_priority = len(m.OPERATOR_STRINGS) + 1
             index = None
             for i, object_info in enumerate(object_list):
@@ -168,7 +181,11 @@ class Evaluate:
                         min_priority = object_info[2]
                         index = i
 
-            Evaluate.evaluate_object(index, object_list)
+            if index is not None:
+                Evaluate.evaluate_object(index, object_list)
+
+            if len(object_list) == 1:
+                done = True
 
         return str(object_list[0][0])
 
@@ -178,20 +195,28 @@ class Evaluate:
         has_list_b = m.OPERATORS[object_list[i][2]][2] == 5
 
         if has_a:
-            if object_list[i - 1][1] == "o" and i != 0:
-                if m.OPERATORS[object_list[i][2]][2] not in (3, 4, 5):
-                    Evaluate.evaluate_object(i - 1, object_list)
-                else:
-                    message.channel.send("Recursive equations {}{}".format(object_list[i - 1][0], object_list[i][0]))
+            if i != 0:
+                if object_list[i - 1][1] == "o":
+                    if m.OPERATORS[object_list[i - 1][2]][2] not in (3, 4, 5):
+                        Evaluate.evaluate_object(i - 1, object_list)
+                    else:
+                        raise Exception("Recursive operation {}{}".format(object_list[i - 1][0], object_list[i][0]))
+            else:
+                raise Exception("Operation {} references edge of expression".format(object_list[i][0]))
+
             a = float(object_list[i - 1][0])
         else:
             a = 0.0
         if has_b:
-            if object_list[i + 1][1] == "o" and i != len(object_list) - 1:
-                if m.OPERATORS[object_list[i][2]][2] not in (2, 4):
-                    Evaluate.evaluate_object(i + 1, object_list)
-                else:
-                    message.channel.send("Recursive equations {}{}".format(object_list[i - 1][0], object_list[i][0]))
+            if i != len(object_list) - 1:
+                if object_list[i + 1][1] == "o":
+                    if m.OPERATORS[object_list[i + 1][2]][2] not in (2, 4):
+                        Evaluate.evaluate_object(i + 1, object_list)
+                    else:
+                        raise Exception("Recursive operation {}{}".format(object_list[i][0], object_list[i + 1][0]))
+            else:
+                raise Exception("Operation {} references edge of expression".format(object_list[i][0]))
+
             b = float(object_list[i + 1][0])
         elif has_list_b:
             b = [float(x) for x in object_list[i + 1][0]]
@@ -217,30 +242,37 @@ class Evaluate:
             print(" ||", string)
 
         done = False
+        loop = 0
         while not done:
             substring_ends = Evaluate.get_substring_ends(string)
             if substring_ends is None:
                 done = True
                 break
+
             substring = string[substring_ends[0]:substring_ends[1] + 1]
             if print_steps:
                 print("found deepest substring\n ||", substring)
+
             object_list = Evaluate.get_object_list(substring[1:len(substring) - 1])
-            object_list = Evaluate.sort_object_list(object_list)
+            object_list = Evaluate.sort_object_list(object_list, loop)
             if print_steps:
                 print("sequenced parts of substring and added asterisks\n ||", object_list)
                 print(" || ", end="")
                 for x in object_list:
                     print(x[0], end="")
                 print("")
+
             result = Evaluate.evaluate_object_list(object_list)
             if print_steps:
                 print("evaluated substring to equal {}".format(result))
+
             temp_list = list(string)
             temp_list[substring_ends[0]:substring_ends[1] + 1] = result
             string = "".join(temp_list)
             if print_steps:
                 print("placed result into equation\n ||", string)
+
+            loop += 1
 
         output = string
         if output not in ("False", "True"):
@@ -266,12 +298,16 @@ async def on_message(message):
     if message.content.startswith("!n help"):
         await message.channel.send("Type equations and the bot will try to evaluate them! '!n commands' for a list of commands.")
 
-    if message.content.startswith("!n commands"):
+    if message.content.startswith("!n operations"):
         await message.channel.send(", ".join(m.OPERATOR_STRINGS))
 
     elif set(message.content) <= m.CHAR_SET:
-        output = Evaluate.main(message.content)
-        await message.channel.send(output)
+        try:
+            output = Evaluate.main(message.content)
+            await message.channel.send(output)
+        except Exception as error_text:
+            if str(error_text) != "None":
+                await message.channel.send(error_text)
 
 print_steps = True
 discord = True
