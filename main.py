@@ -289,6 +289,9 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    global next_num
+    global prev_user
+
     if message.channel.id != 724602804777254986:
         return
 
@@ -296,21 +299,52 @@ async def on_message(message):
         return
 
     if message.content.startswith("!n help"):
-        await message.channel.send("Type equations and the bot will try to evaluate them! '!n commands' for a list of commands.")
+        await message.channel.send("Type equations and the bot will try to evaluate them! '!n commands' for a list of commands")
 
-    if message.content.startswith("!n operations"):
+    elif message.content.startswith("!n commands"):
+        await message.channel.send("'!n help' for help\n'!n operations' for a list of operations\n'!n mode' to change the mode")
+
+    elif message.content.startswith("!n operations"):
         await message.channel.send(", ".join(m.OPERATOR_STRINGS))
+
+    elif message.content.startswith("!n mode"):
+        if message.content.endswith("count"):
+            next_num = 0
+            await message.channel.send("Mode changed to counter, next number 0")
+        elif message.content.endswith("eval"):
+            next_num = None
+            await message.channel.send("Mode changed to evaluater")
+        else:
+            await message.channel.send("'!n mode count' for counter, '!n mode eval' for evaluater")
 
     elif set(message.content) <= m.CHAR_SET:
         try:
             output = Evaluate.main(message.content)
-            await message.channel.send(output)
+            if next_num is None:
+                await message.channel.send(output)
+            else:
+                if message.author != prev_user:
+                    if round(float(output)) == next_num:
+                        await message.add_reaction("✅")
+                        next_num += 1
+                        prev_user = message.author
+                    else:
+                        await message.add_reaction("❌")
+                        await message.channel.send("Incorrect number {}, should have rounded to {}, next number 0".format(output, next_num))
+                        next_num = 0
+                else:
+                    await message.add_reaction("❌")
+                    await message.channel.send("Same user can't increment twice, next number 0")
+                    next_num = 0
         except Exception as error_text:
             if str(error_text) != "None":
                 await message.channel.send(error_text)
 
 print_steps = True
 discord = True
+
+next_num = 0
+prev_user = None
 
 if discord:
     client.run('')
