@@ -9,8 +9,9 @@ logging.basicConfig()
 
 class Evaluate:
     def tidy_string(string):
-        string = re.sub(' ', '', string)
-        if print_steps:
+        string = re.sub(" ", "", string)
+        string = re.sub("\\\\", "", string)
+        if PRINT_STEPS:
             print("removed spaces")
 
         characters = list(string)
@@ -30,12 +31,12 @@ class Evaluate:
 
         for i in range(layer):
             del characters[bracket_start[-1 - i]]
-        if print_steps:
+        if PRINT_STEPS:
             print("removed {} out of place open brackets".format(layer))
 
         for i, bracket in enumerate(bracket_remove):
             del characters[bracket - i]
-        if print_steps:
+        if PRINT_STEPS:
             print("removed {} out of place close brackets".format(len(bracket_remove)))
 
         asterix_add = list()
@@ -47,7 +48,7 @@ class Evaluate:
 
         for i, asterix in enumerate(asterix_add):
             characters.insert(asterix + i, "*")
-        if print_steps:
+        if PRINT_STEPS:
             print("inserted {} missing asterixes".format(len(asterix_add)))
 
         characters.insert(0, "(")
@@ -238,7 +239,7 @@ class Evaluate:
 
     def main(string_input):
         string = Evaluate.tidy_string(string_input)
-        if print_steps:
+        if PRINT_STEPS:
             print(" ||", string)
 
         done = False
@@ -250,12 +251,12 @@ class Evaluate:
                 break
 
             substring = string[substring_ends[0]:substring_ends[1] + 1]
-            if print_steps:
+            if PRINT_STEPS:
                 print("found deepest substring\n ||", substring)
 
             object_list = Evaluate.get_object_list(substring[1:len(substring) - 1])
             object_list = Evaluate.sort_object_list(object_list, loop)
-            if print_steps:
+            if PRINT_STEPS:
                 print("sequenced parts of substring and added asterisks\n ||", object_list)
                 print(" || ", end="")
                 for x in object_list:
@@ -263,13 +264,13 @@ class Evaluate:
                 print("")
 
             result = Evaluate.evaluate_object_list(object_list)
-            if print_steps:
+            if PRINT_STEPS:
                 print("evaluated substring to equal {}".format(result))
 
             temp_list = list(string)
             temp_list[substring_ends[0]:substring_ends[1] + 1] = result
             string = "".join(temp_list)
-            if print_steps:
+            if PRINT_STEPS:
                 print("placed result into equation\n ||", string)
 
             loop += 1
@@ -289,64 +290,93 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    global next_num
+    global current_num
+    global high_score
     global prev_user
 
-    if message.channel.id != 724602804777254986:
+    if message.channel.id != CHANNEL_ID:
         return
 
     if message.author == client.user:
         return
 
-    if message.content.startswith("!n help"):
-        await message.channel.send("Type equations and the bot will try to evaluate them! '!n commands' for a list of commands")
+    if message.content.startswith("c!help"):
+        await message.channel.send("Type equations and the bot will try to evaluate them! 'c!operations' for a list of operations, 'c!server' for the high score")
 
-    elif message.content.startswith("!n commands"):
-        await message.channel.send("'!n help' for help\n'!n operations' for a list of operations\n'!n mode' to change the mode")
+    elif message.content.startswith("c!commands"):
+        await message.channel.send("'c!help' for help\n'c!operations' for a list of operations\n'c!mode' to change the mode\n'c!server' for the high score")
 
-    elif message.content.startswith("!n operations"):
+    elif message.content.startswith("c!operations"):
         await message.channel.send(", ".join(m.OPERATOR_STRINGS))
 
-    elif message.content.startswith("!n mode"):
+    elif message.content.startswith("c!mode"):
         if message.content.endswith("count"):
-            next_num = 0
-            await message.channel.send("Mode changed to counter, next number 0")
+            current_num = int(open("score_store.txt", "r").read().split(" ")[0])
+            high_score = int(open("score_store.txt", "r").read().split(" ")[1])
+            prev_user = None
+            await message.channel.send("Mode changed to counter, next number is {}".format(current_num + 1))
         elif message.content.endswith("eval"):
-            next_num = None
+            open("score_store.txt", "w").write(" ".join((str(current_num), str(high_score))))
+            current_num = None
             await message.channel.send("Mode changed to evaluater")
         else:
-            await message.channel.send("'!n mode count' for counter, '!n mode eval' for evaluater")
+            await message.channel.send("Current mode is {}. 'c!mode count' for counter, 'c!mode eval' for evaluater".format(("counter", "evaluater")[current_num is None]))
 
     elif set(message.content) <= m.CHAR_SET:
         try:
             output = Evaluate.main(message.content)
-            if next_num is None:
+            if current_num is None:
                 await message.channel.send(output)
             else:
                 if message.author != prev_user:
-                    if round(float(output)) == next_num:
-                        await message.add_reaction("✅")
-                        next_num += 1
+                    if round(float(output)) == current_num + 1:
+                        if current_num + 1 > high_score:
+                            await message.add_reaction("☑️")
+                        else:
+                            await message.add_reaction("✅")
+                        current_num += 1
                         prev_user = message.author
+                        open("score_store.txt", "w").write(" ".join((str(current_num), str(high_score))))
                     else:
-                        await message.add_reaction("❌")
-                        await message.channel.send("Incorrect number {}, should have rounded to {}, next number 0".format(output, next_num))
-                        next_num = 0
+                        if current_num > BASE_NUM:
+                            await message.add_reaction("❌")
+                            await message.channel.send("{} RUINED IT AT **{}**!! Next number is **1**. Wrong number.".format(message.author.mention, current_num))
+                            if current_num > high_score:
+                                high_score = current_num
+                            current_num = BASE_NUM
+                            prev_user = None
+                            open("score_store.txt", "w").write(" ".join((str(current_num), str(high_score))))
+                        else:
+                            await message.add_reaction("⚠️")
+                            await message.channel.send("Incorrect number! Next number is **1**. No scores have been changed since the current number was 0.")
+                            prev_user = None
                 else:
                     await message.add_reaction("❌")
-                    await message.channel.send("Same user can't increment twice, next number 0")
-                    next_num = 0
+                    await message.channel.send("{} RUINED IT AT **{}**!! Next number is **1**. You can't count two numbers in a row.".format(message.author.mention, current_num))
+                    if current_num > high_score:
+                        high_score = current_num
+                    current_num = BASE_NUM
+                    prev_user = None
+                    open("score_store.txt", "w").write(" ".join((str(current_num), str(high_score))))
+
         except Exception as error_text:
-            if str(error_text) != "None":
+            if str(error_text) != "None" and SEND_ERROR_MESSAGES:
                 await message.channel.send(error_text)
+            else:
+                print(error_text)
 
-print_steps = True
-discord = True
-
-next_num = 0
+PRINT_STEPS = True
+SEND_ERROR_MESSAGES = False
+DISCORD = True
+BASE_NUM = 0
+CHANNEL_ID = 724602804777254986
+BOT_TOKEN = ""
+current_num = int(open("score_store.txt", "r").read().split(" ")[0])
+high_score = int(open("score_store.txt", "r").read().split(" ")[1])
 prev_user = None
 
-if discord:
-    client.run('')
+if DISCORD:
+    client.run(BOT_TOKEN)
 else:
-    print(Evaluate.main(input("Equation here:\n")))
+    while True:
+        print(Evaluate.main(input("Equation here:\n")))
