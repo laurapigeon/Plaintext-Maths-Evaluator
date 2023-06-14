@@ -3,7 +3,13 @@ import re
 import discord
 import logging
 
-client = discord.Client()
+
+intents = discord.Intents.default()  # Create a default intents object
+intents.typing = False  # Disable the typing events, if desired
+intents.presences = True  # Disable the presence events, if desired
+intents.message_content = True
+
+client = discord.Client(intents=intents)
 logging.basicConfig()
 
 
@@ -287,12 +293,22 @@ class Evaluate:
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
+    channel = client.get_channel(CHANNEL_ID)
+
+    # Check if the channel is valid
+    if channel is not None:
+        # Send a test message
+        await channel.send("Bot is ready and can send messages!")
+    else:
+        print("Invalid channel ID")
+
 
 @client.event
 async def on_message(message):
     global current_num
     global high_score
     global prev_user
+    global singleplayer
 
     if message.channel.id != CHANNEL_ID:
         return
@@ -304,10 +320,14 @@ async def on_message(message):
         await message.channel.send("Type equations and the bot will try to evaluate them! 'c!operations' for a list of operations, 'c!server' for the high score")
 
     elif message.content.startswith("c!commands"):
-        await message.channel.send("'c!help' for help\n'c!operations' for a list of operations\n'c!mode' to change the mode\n'c!server' for the high score")
+        await message.channel.send("'c!help' for help\n'c!operations' for a list of operations\n'c!mode' to change the mode\n'c!server' for the high score\n'c!singleplayer' to toggle singleplayer")
 
     elif message.content.startswith("c!operations"):
         await message.channel.send(", ".join(m.OPERATOR_STRINGS))
+
+    elif message.content.startswith("c!singleplayer"):
+        singleplayer = not singleplayer
+        await message.channel.send("Turned singleplayer {}".format(("off", "on")[singleplayer]))
 
     elif message.content.startswith("c!mode"):
         if message.content.endswith("count"):
@@ -328,7 +348,7 @@ async def on_message(message):
             if current_num is None:
                 await message.channel.send(output)
             else:
-                if message.author != prev_user:
+                if message.author != prev_user or singleplayer:
                     if round(float(output)) == current_num + 1:
                         if current_num + 1 > high_score:
                             await message.add_reaction("☑️")
@@ -371,6 +391,7 @@ DISCORD = True
 BASE_NUM = 0
 CHANNEL_ID = 724602804777254986
 BOT_TOKEN = ""
+singleplayer = False
 current_num = int(open("score_store.txt", "r").read().split(" ")[0])
 high_score = int(open("score_store.txt", "r").read().split(" ")[1])
 prev_user = None
